@@ -27,10 +27,14 @@ function MainApp() {
   // Filter menu items based on selected category
   const filteredMenuItems = selectedCategory === 'all' 
     ? menuItems 
-    : menuItems.filter(item => item.category === selectedCategory);
+    : menuItems.filter(item => {
+        // Convert category name to ID format for comparison
+        const categoryId = item.category.toLowerCase().replace(/\s+/g, '-');
+        return categoryId === selectedCategory || item.category === selectedCategory;
+      });
 
   return (
-    <div className="min-h-screen bg-cream-50 font-inter">
+    <div className="min-h-screen bg-firehouse-off-white font-inter">
       <Header 
         cartItemsCount={cart.getTotalItems()}
         onCartClick={() => handleViewChange('cart')}

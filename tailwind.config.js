@@ -4,16 +4,19 @@ export default {
   theme: {
     extend: {
       colors: {
-        ramen: {
-          red: '#D7263D',
-          dark: '#0B0A0A',
-          charcoal: '#111113',
-          cream: '#FFF3E0',
-          beige: '#F7E7CE',
-          gold: '#E0A106',
-          sesame: '#D1C7B7',
-          seaweed: '#1F2937',
-          kimchi: '#B81D24'
+        firehouse: {
+          yellow: '#FFB800',
+          'yellow-light': '#FFD700',
+          'yellow-dark': '#E6A500',
+          'off-white': '#FEFEF8',
+          'off-white-dark': '#F5F5F0',
+          charcoal: '#2C2C2C',
+          'charcoal-light': '#4A4A4A',
+          red: '#DC2626',
+          'red-light': '#EF4444',
+          white: '#FFFFFF',
+          gray: '#6B7280',
+          'gray-light': '#9CA3AF'
         }
       },
       fontFamily: {

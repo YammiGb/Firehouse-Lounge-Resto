@@ -12,42 +12,51 @@ const Header: React.FC<HeaderProps> = ({ cartItemsCount, onCartClick, onMenuClic
   const { siteSettings, loading } = useSiteSettings();
 
   return (
-    <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-ramen-sesame shadow-sm">
+    <header className="sticky top-0 z-50 bg-firehouse-off-white/95 backdrop-blur-md border-b border-firehouse-yellow/20 shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <button 
             onClick={onMenuClick}
-            className="flex items-center space-x-2 text-ramen-dark hover:text-ramen-red transition-colors duration-200"
+            className="flex items-center space-x-3 text-firehouse-charcoal hover:text-firehouse-yellow transition-colors duration-200"
           >
             {loading ? (
-              <div className="w-10 h-10 bg-gray-200 rounded-full animate-pulse" />
+              <div className="w-10 h-10 bg-firehouse-gray-light rounded-full animate-pulse" />
             ) : (
               <img 
-                src={siteSettings?.site_logo || "/logo.jpg"} 
-                alt={siteSettings?.site_name || "Ramen Yard"}
-                className="w-10 h-10 rounded object-cover ring-2 ring-ramen-gold"
+                src={siteSettings?.site_logo || "/logo.png"} 
+                alt={siteSettings?.site_name || "Firehouse Lounge & Resto"}
+                className="w-10 h-10 rounded-full object-cover shadow-md"
                 onError={(e) => {
-                  e.currentTarget.src = "/logo.jpg";
+                  e.currentTarget.src = "/logo.png";
                 }}
               />
             )}
-            <h1 className="text-2xl font-pretendard font-semibold">
-              {loading ? (
-                <div className="w-24 h-6 bg-gray-200 rounded animate-pulse" />
-              ) : (
-                "Ramen Yard"
-              )}
-            </h1>
+            <div className="text-left">
+              <h1 className="text-2xl font-bold text-firehouse-charcoal leading-tight">
+                {loading ? (
+                  <div className="w-32 h-6 bg-firehouse-gray-light rounded animate-pulse" />
+                ) : (
+                  "Firehouse"
+                )}
+              </h1>
+              <p className="text-sm text-firehouse-gray font-medium -mt-1">
+                {loading ? (
+                  <div className="w-20 h-4 bg-firehouse-gray-light rounded animate-pulse" />
+                ) : (
+                  "Lounge & Resto"
+                )}
+              </p>
+            </div>
           </button>
 
           <div className="flex items-center space-x-2">
             <button 
               onClick={onCartClick}
-              className="relative p-2 text-gray-700 hover:text-black hover:bg-ramen-cream rounded-full transition-all duration-200"
+              className="relative p-3 text-firehouse-charcoal hover:text-firehouse-yellow hover:bg-firehouse-yellow/10 rounded-full transition-all duration-200 border border-firehouse-yellow/20 hover:border-firehouse-yellow"
             >
               <ShoppingCart className="h-6 w-6" />
               {cartItemsCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-ramen-red text-white text-xs rounded-full h-5 w-5 flex items-center justify-center animate-bounce-gentle">
+                <span className="absolute -top-1 -right-1 bg-firehouse-yellow text-firehouse-charcoal text-xs rounded-full h-5 w-5 flex items-center justify-center animate-bounce-gentle font-bold">
                   {cartItemsCount}
                 </span>
               )}

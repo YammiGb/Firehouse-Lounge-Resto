@@ -73,6 +73,8 @@ const AdminDashboard: React.FC = () => {
       return;
     }
 
+    console.log('Form data being saved:', formData);
+
     try {
       if (editingItem) {
         await updateMenuItem(editingItem.id, formData);
@@ -82,7 +84,8 @@ const AdminDashboard: React.FC = () => {
       setCurrentView('items');
       setEditingItem(null);
     } catch (error) {
-      alert('Failed to save item');
+      console.error('Error saving item:', error);
+      alert(`Failed to save item: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   };
 
@@ -227,12 +230,16 @@ const AdminDashboard: React.FC = () => {
   const availableItems = menuItems.filter(item => item.available).length;
   const categoryCounts = categories.map(cat => ({
     ...cat,
-    count: menuItems.filter(item => item.category === cat.id).length
+    count: menuItems.filter(item => 
+      item.category === cat.id || 
+      item.category === cat.name ||
+      item.category.toLowerCase().replace(/\s+/g, '-') === cat.id
+    ).length
   }));
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (password === 'ClickEats@Admin!2025') {
+    if (password === 'FirehouseLounge@Admin!2025') {
       setIsAuthenticated(true);
       localStorage.setItem('beracah_admin_auth', 'true');
       setLoginError('');
@@ -273,7 +280,7 @@ const AdminDashboard: React.FC = () => {
                 required
               />
               {loginError && (
-                <p className="text-red-500 text-sm mt-2">{loginError}</p>
+                <p className="text-firehouse-red text-sm mt-2">{loginError}</p>
               )}
             </div>
             
@@ -503,7 +510,7 @@ const AdminDashboard: React.FC = () => {
                   />
                   <button
                     onClick={() => removeVariation(index)}
-                    className="p-2 text-red-500 hover:text-red-600 hover:bg-red-50 rounded transition-colors duration-200"
+                    className="p-2 text-firehouse-red hover:text-firehouse-red hover:bg-red-50 rounded transition-colors duration-200"
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>
@@ -551,7 +558,7 @@ const AdminDashboard: React.FC = () => {
                   />
                   <button
                     onClick={() => removeAddOn(index)}
-                    className="p-2 text-red-500 hover:text-red-600 hover:bg-red-50 rounded transition-colors duration-200"
+                    className="p-2 text-firehouse-red hover:text-firehouse-red hover:bg-red-50 rounded transition-colors duration-200"
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>
@@ -740,7 +747,7 @@ const AdminDashboard: React.FC = () => {
                         <div className="flex flex-col">
                           {item.isOnDiscount && item.discountPrice ? (
                             <>
-                              <span className="text-red-600 font-semibold">₱{item.discountPrice}</span>
+                              <span className="text-firehouse-red font-semibold">₱{item.discountPrice}</span>
                               <span className="text-gray-500 line-through text-xs">₱{item.basePrice}</span>
                             </>
                           ) : (
@@ -782,7 +789,7 @@ const AdminDashboard: React.FC = () => {
                           <button
                             onClick={() => handleDeleteItem(item.id)}
                             disabled={isProcessing}
-                            className="p-2 text-red-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors duration-200"
+                            className="p-2 text-red-400 hover:text-firehouse-red hover:bg-red-50 rounded transition-colors duration-200"
                           >
                             <Trash2 className="h-4 w-4" />
                           </button>
@@ -819,7 +826,7 @@ const AdminDashboard: React.FC = () => {
                       <button
                         onClick={() => handleDeleteItem(item.id)}
                         disabled={isProcessing}
-                        className="p-2 text-red-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors duration-200"
+                        className="p-2 text-red-400 hover:text-firehouse-red hover:bg-red-50 rounded transition-colors duration-200"
                       >
                         <Trash2 className="h-4 w-4" />
                       </button>
@@ -844,7 +851,7 @@ const AdminDashboard: React.FC = () => {
                       <span className="text-gray-500">Price:</span>
                       <span className="ml-1 font-medium text-gray-900">
                         {item.isOnDiscount && item.discountPrice ? (
-                          <span className="text-red-600">₱{item.discountPrice}</span>
+                          <span className="text-firehouse-red">₱{item.discountPrice}</span>
                         ) : (
                           `₱${item.basePrice}`
                         )}
@@ -934,7 +941,7 @@ const AdminDashboard: React.FC = () => {
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-4">
               <Coffee className="h-8 w-8 text-black" />
-              <h1 className="text-2xl font-noto font-semibold text-black">ClickEats Admin</h1>
+              <h1 className="text-2xl font-noto font-semibold text-black">Firehouse Lounge & Resto Admin</h1>
             </div>
             <div className="flex items-center space-x-4">
               <a

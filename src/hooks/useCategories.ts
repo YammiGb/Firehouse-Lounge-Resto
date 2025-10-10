@@ -20,15 +20,69 @@ export const useCategories = () => {
     try {
       setLoading(true);
       
-      const { data, error: fetchError } = await supabase
+      // First try to fetch from categories table (if it exists)
+      const { data: categoriesData, error: categoriesError } = await supabase
         .from('categories')
         .select('*')
         .eq('active', true)
         .order('sort_order', { ascending: true });
 
-      if (fetchError) throw fetchError;
+      if (categoriesData && categoriesData.length > 0) {
+        setCategories(categoriesData);
+        setError(null);
+        return;
+      }
 
-      setCategories(data || []);
+      // If categories table doesn't exist or is empty, get unique categories from menu_items
+      const { data: menuItems, error: menuError } = await supabase
+        .from('menu_items')
+        .select('category')
+        .eq('available', true);
+
+      if (menuError) throw menuError;
+
+      // Create categories from unique menu item categories
+      const uniqueCategories = [...new Set(menuItems?.map(item => item.category) || [])];
+      const categoryMap: { [key: string]: string } = {
+        'Starters': '🍽️',
+        'Salads': '🥗',
+        'Burgers': '🍔',
+        'Pizza': '🍕',
+        'Wings': '🍗',
+        'Sandwiches': '🥪',
+        'Pasta': '🍝',
+        'Solo Meals': '🍚',
+        'Batangas Lomi': '🍜',
+        'Frappe': '☕',
+        'Cold Beverages': '🥤',
+        'Hot Beverages': '☕',
+        'Beer': '🍺',
+        'Breakfast': '🍳',
+        'Rice Meals': '🍛',
+        'Group Meals': '👥',
+        'Main Dishes': '🍖',
+        'Beverages': '🥤',
+        'Desserts': '🍰',
+        'Appetizers': '🥗',
+        'Soups': '🍲',
+        'Seafood': '🐟',
+        'Chicken': '🐔',
+        'Beef': '🥩',
+        'Vegetarian': '🥬',
+        'Vegan': '🌱'
+      };
+
+      const formattedCategories = uniqueCategories.map((category, index) => ({
+        id: category.toLowerCase().replace(/\s+/g, '-'),
+        name: category,
+        icon: categoryMap[category] || '🍽️',
+        sort_order: index + 1,
+        active: true,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      }));
+
+      setCategories(formattedCategories);
       setError(null);
     } catch (err) {
       console.error('Error fetching categories:', err);

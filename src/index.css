@@ -2,14 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Ramen Yard Custom Styles */
-/* Minimal helpers for ramen palette when needed outside tailwind tokens */
-.bg-ramen-cream { background-color: #FFF3E0; }
-.bg-ramen-beige { background-color: #F7E7CE; }
-.text-ramen-red { color: #D7263D; }
-.text-ramen-dark { color: #0B0A0A; }
-.border-ramen-sesame { border-color: #D1C7B7; }
-.ring-ramen-gold { --tw-ring-color: #E0A106; }
+/* Firehouse Lounge & Resto Custom Styles */
+/* Minimal helpers for firehouse palette when needed outside tailwind tokens */
+.bg-firehouse-off-white { background-color: #FEFEF8; }
+.bg-firehouse-yellow { background-color: #FFB800; }
+.text-firehouse-yellow { color: #FFB800; }
+.text-firehouse-charcoal { color: #2C2C2C; }
+.border-firehouse-yellow { border-color: #FFB800; }
+.ring-firehouse-yellow { --tw-ring-color: #FFB800; }
 
 /* Hide scrollbar for mobile nav */
 .scrollbar-hide {

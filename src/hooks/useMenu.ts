@@ -77,6 +77,20 @@ export const useMenu = () => {
 
   const addMenuItem = async (item: Omit<MenuItem, 'id'>) => {
     try {
+      console.log('Adding menu item with data:', {
+        name: item.name,
+        description: item.description,
+        base_price: item.basePrice,
+        category: item.category,
+        popular: item.popular || false,
+        available: item.available ?? true,
+        image_url: item.image || null,
+        discount_price: item.discountPrice || null,
+        discount_start_date: item.discountStartDate || null,
+        discount_end_date: item.discountEndDate || null,
+        discount_active: item.discountActive || false
+      });
+
       // Insert menu item
       const { data: menuItem, error: itemError } = await supabase
         .from('menu_items')
@@ -96,10 +110,14 @@ export const useMenu = () => {
         .select()
         .single();
 
-      if (itemError) throw itemError;
+      if (itemError) {
+        console.error('Menu item insert error:', itemError);
+        throw new Error(`Database error: ${itemError.message} (Code: ${itemError.code})`);
+      }
 
       // Insert variations if any
       if (item.variations && item.variations.length > 0) {
+        console.log('Adding variations:', item.variations);
         const { error: variationsError } = await supabase
           .from('variations')
           .insert(
@@ -110,11 +128,15 @@ export const useMenu = () => {
             }))
           );
 
-        if (variationsError) throw variationsError;
+        if (variationsError) {
+          console.error('Variations insert error:', variationsError);
+          throw new Error(`Variations error: ${variationsError.message} (Code: ${variationsError.code})`);
+        }
       }
 
       // Insert add-ons if any
       if (item.addOns && item.addOns.length > 0) {
+        console.log('Adding add-ons:', item.addOns);
         const { error: addOnsError } = await supabase
           .from('add_ons')
           .insert(
@@ -126,7 +148,10 @@ export const useMenu = () => {
             }))
           );
 
-        if (addOnsError) throw addOnsError;
+        if (addOnsError) {
+          console.error('Add-ons insert error:', addOnsError);
+          throw new Error(`Add-ons error: ${addOnsError.message} (Code: ${addOnsError.code})`);
+        }
       }
 
       await fetchMenuItems();
