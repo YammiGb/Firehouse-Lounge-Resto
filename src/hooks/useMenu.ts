@@ -19,6 +19,7 @@ export const useMenu = () => {
           variations (*),
           add_ons (*)
         `)
+        .order('sort_order', { ascending: true })
         .order('created_at', { ascending: true });
 
       if (itemsError) throw itemsError;
@@ -51,6 +52,7 @@ export const useMenu = () => {
           discountActive: item.discount_active || false,
           effectivePrice,
           isOnDiscount: isDiscountActive,
+          sortOrder: item.sort_order,
           variations: item.variations?.map(v => ({
             id: v.id,
             name: v.name,
@@ -105,7 +107,8 @@ export const useMenu = () => {
           discount_price: item.discountPrice || null,
           discount_start_date: item.discountStartDate || null,
           discount_end_date: item.discountEndDate || null,
-          discount_active: item.discountActive || false
+          discount_active: item.discountActive || false,
+          sort_order: item.sortOrder || 0
         })
         .select()
         .single();
@@ -178,7 +181,8 @@ export const useMenu = () => {
           discount_price: updates.discountPrice || null,
           discount_start_date: updates.discountStartDate || null,
           discount_end_date: updates.discountEndDate || null,
-          discount_active: updates.discountActive
+          discount_active: updates.discountActive,
+          sort_order: updates.sortOrder
         })
         .eq('id', id);
 

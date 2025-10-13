@@ -31,6 +31,8 @@ export interface MenuItem {
   // Computed effective price (calculated in the app)
   effectivePrice?: number;
   isOnDiscount?: boolean;
+  // Sort order for menu display
+  sortOrder?: number;
 }
 
 export interface CartItem extends MenuItem {

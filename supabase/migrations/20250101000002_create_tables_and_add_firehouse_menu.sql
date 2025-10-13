@@ -98,9 +98,167 @@ CREATE TABLE IF NOT EXISTS menu_items (
   discount_start_date timestamptz,
   discount_end_date timestamptz,
   discount_active boolean DEFAULT false,
+  sort_order integer DEFAULT 0,
   created_at timestamptz DEFAULT now(),
   updated_at timestamptz DEFAULT now()
 );
+
+-- Add sort_order column if it doesn't exist (for existing tables)
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns 
+    WHERE table_name = 'menu_items' AND column_name = 'sort_order'
+  ) THEN
+    ALTER TABLE menu_items ADD COLUMN sort_order integer DEFAULT 0;
+  END IF;
+END $$;
+
+-- Update sort_order for existing Starters items
+UPDATE menu_items SET sort_order = 1 WHERE name = 'Cheesy Nachos' AND category = 'Starters';
+UPDATE menu_items SET sort_order = 2 WHERE name = 'Taco Bites' AND category = 'Starters';
+UPDATE menu_items SET sort_order = 3 WHERE name = 'French Fries' AND category = 'Starters';
+UPDATE menu_items SET sort_order = 4 WHERE name = 'Mojitos' AND category = 'Starters';
+UPDATE menu_items SET sort_order = 5 WHERE name = 'Snack Platter' AND category = 'Starters';
+UPDATE menu_items SET sort_order = 6 WHERE name = 'Cheese Quesadilla' AND category = 'Starters';
+UPDATE menu_items SET sort_order = 7 WHERE name = 'TORTIZZA' AND category = 'Starters';
+UPDATE menu_items SET sort_order = 8 WHERE name = 'Double Cheese Bread' AND category = 'Starters';
+UPDATE menu_items SET sort_order = 9 WHERE name = 'Onion Rings' AND category = 'Starters';
+UPDATE menu_items SET sort_order = 10 WHERE name = 'Chicken n'' Fish Chips' AND category = 'Starters';
+
+-- Update sort_order for existing Salad items
+UPDATE menu_items SET sort_order = 1 WHERE name = 'Green Tossed Salad' AND category = 'Salads';
+UPDATE menu_items SET sort_order = 2 WHERE name = 'Firehouse Salad' AND category = 'Salads';
+UPDATE menu_items SET sort_order = 3 WHERE name = 'Paradise Salad' AND category = 'Salads';
+
+-- Update sort_order for existing Burger items
+UPDATE menu_items SET sort_order = 1 WHERE name = 'Classic Burger' AND category = 'Burgers';
+UPDATE menu_items SET sort_order = 2 WHERE name = 'Bacon & Mushroom' AND category = 'Burgers';
+UPDATE menu_items SET sort_order = 3 WHERE name = 'Jalapeno' AND category = 'Burgers';
+UPDATE menu_items SET sort_order = 4 WHERE name = 'B-L-T' AND category = 'Burgers';
+UPDATE menu_items SET sort_order = 5 WHERE name = 'Firehouse Paradise' AND category = 'Burgers';
+UPDATE menu_items SET sort_order = 6 WHERE name = 'Sliders Burger' AND category = 'Burgers';
+UPDATE menu_items SET sort_order = 7 WHERE name = 'Double Decker' AND category = 'Burgers';
+
+-- Update sort_order for existing Pizza items
+-- Classic Flavor
+UPDATE menu_items SET sort_order = 1 WHERE name = 'Supreme Cheese' AND category = 'Pizza';
+UPDATE menu_items SET sort_order = 2 WHERE name = 'Bacon & Cheese' AND category = 'Pizza';
+UPDATE menu_items SET sort_order = 3 WHERE name = 'Classic Aloha' AND category = 'Pizza';
+UPDATE menu_items SET sort_order = 4 WHERE name = 'Vegan Lover' AND category = 'Pizza';
+-- Supreme Flavor
+UPDATE menu_items SET sort_order = 5 WHERE name = 'Ultimate Aloha' AND category = 'Pizza';
+UPDATE menu_items SET sort_order = 6 WHERE name = 'Pepperoni & Bacon' AND category = 'Pizza';
+UPDATE menu_items SET sort_order = 7 WHERE name = 'Tuna Jalapeno' AND category = 'Pizza';
+UPDATE menu_items SET sort_order = 8 WHERE name = 'Gurus Choice' AND category = 'Pizza';
+UPDATE menu_items SET sort_order = 9 WHERE name = 'Meat Overload' AND category = 'Pizza';
+UPDATE menu_items SET sort_order = 10 WHERE name = 'Pick of the Bunch' AND category = 'Pizza';
+
+-- Update sort_order for existing Wings items
+UPDATE menu_items SET sort_order = 1 WHERE name = 'Plain Wings' AND category = 'Wings';
+UPDATE menu_items SET sort_order = 2 WHERE name = 'Parmesan Wings' AND category = 'Wings';
+UPDATE menu_items SET sort_order = 3 WHERE name = 'Korean Soy Wings' AND category = 'Wings';
+UPDATE menu_items SET sort_order = 4 WHERE name = 'Buffalo Wings' AND category = 'Wings';
+UPDATE menu_items SET sort_order = 5 WHERE name = 'Trio Wings' AND category = 'Wings';
+UPDATE menu_items SET sort_order = 6 WHERE name = 'Medium Tray Wings' AND category = 'Wings';
+UPDATE menu_items SET sort_order = 7 WHERE name = 'Large Tray Wings' AND category = 'Wings';
+
+-- Update sort_order for existing Sandwiches items
+UPDATE menu_items SET sort_order = 1 WHERE name = 'Clubhouse Sandwich' AND category = 'Sandwiches';
+UPDATE menu_items SET sort_order = 2 WHERE name = 'Chicken Sandwich' AND category = 'Sandwiches';
+
+-- Update sort_order for existing Pasta items
+UPDATE menu_items SET sort_order = 1 WHERE name = 'Pinoy Spaghetti' AND category = 'Pasta';
+UPDATE menu_items SET sort_order = 2 WHERE name = 'Carbonara' AND category = 'Pasta';
+UPDATE menu_items SET sort_order = 3 WHERE name = 'Tuna Basil' AND category = 'Pasta';
+UPDATE menu_items SET sort_order = 4 WHERE name = 'Baked Macaroni' AND category = 'Pasta';
+UPDATE menu_items SET sort_order = 5 WHERE name = 'Vietnamese Pasta' AND category = 'Pasta';
+
+-- Update sort_order for existing Solo Meals items
+UPDATE menu_items SET sort_order = 1 WHERE name = 'GOURMET 1' AND category = 'Solo Meals';
+UPDATE menu_items SET sort_order = 2 WHERE name = 'GOURMET 2' AND category = 'Solo Meals';
+UPDATE menu_items SET sort_order = 3 WHERE name = 'GOURMET 3' AND category = 'Solo Meals';
+UPDATE menu_items SET sort_order = 4 WHERE name = 'GOURMET 4' AND category = 'Solo Meals';
+UPDATE menu_items SET sort_order = 5 WHERE name = 'GOURMET 5' AND category = 'Solo Meals';
+
+-- Update sort_order for existing Batangas Lomi items
+UPDATE menu_items SET sort_order = 1 WHERE name = 'Batangas Lomi' AND category = 'Batangas Lomi';
+
+-- Update sort_order for existing Cold Beverages items
+UPDATE menu_items SET sort_order = 1 WHERE name = 'Soda in Can' AND category = 'Cold Beverages';
+UPDATE menu_items SET sort_order = 2 WHERE name = 'Soda 1.5L' AND category = 'Cold Beverages';
+UPDATE menu_items SET sort_order = 3 WHERE name = 'Juice' AND category = 'Cold Beverages';
+UPDATE menu_items SET sort_order = 4 WHERE name = 'Solo' AND category = 'Cold Beverages';
+UPDATE menu_items SET sort_order = 5 WHERE name = 'Pitcher' AND category = 'Cold Beverages';
+UPDATE menu_items SET sort_order = 6 WHERE name = 'Pineapple Juice' AND category = 'Cold Beverages';
+UPDATE menu_items SET sort_order = 7 WHERE name = 'Bottled Water 500ml' AND category = 'Cold Beverages';
+
+-- Update sort_order for existing Hot Beverages items
+UPDATE menu_items SET sort_order = 1 WHERE name = 'Kapeng Barako' AND category = 'Hot Beverages';
+UPDATE menu_items SET sort_order = 2 WHERE name = 'Honey Lemon Tea' AND category = 'Hot Beverages';
+
+-- Update sort_order for existing Frappe items
+UPDATE menu_items SET sort_order = 1 WHERE name = 'Java Chip Frappe' AND category = 'Frappe';
+UPDATE menu_items SET sort_order = 2 WHERE name = 'Mocha Frappe' AND category = 'Frappe';
+UPDATE menu_items SET sort_order = 3 WHERE name = 'Chocolate Frappe' AND category = 'Frappe';
+UPDATE menu_items SET sort_order = 4 WHERE name = 'Cookies and Cream Frappe' AND category = 'Frappe';
+UPDATE menu_items SET sort_order = 5 WHERE name = 'Caramel Macchiato Frappe' AND category = 'Frappe';
+
+-- Update sort_order for existing Beer items
+UPDATE menu_items SET sort_order = 1 WHERE name = 'San Mig Light in Can' AND category = 'Beer';
+UPDATE menu_items SET sort_order = 2 WHERE name = 'Bucket Beer' AND category = 'Beer';
+
+-- Update sort_order for existing Breakfast items
+UPDATE menu_items SET sort_order = 1 WHERE name = 'Liempo Silog' AND category = 'Breakfast';
+UPDATE menu_items SET sort_order = 2 WHERE name = 'Bangus Silog' AND category = 'Breakfast';
+UPDATE menu_items SET sort_order = 3 WHERE name = 'Bacon Silog' AND category = 'Breakfast';
+UPDATE menu_items SET sort_order = 4 WHERE name = 'Ham Silog' AND category = 'Breakfast';
+UPDATE menu_items SET sort_order = 5 WHERE name = 'Tinapa Silog' AND category = 'Breakfast';
+UPDATE menu_items SET sort_order = 6 WHERE name = 'Danggit Silog' AND category = 'Breakfast';
+
+-- Update sort_order for existing Rice Meals items
+-- Row 1 (Right to Left)
+UPDATE menu_items SET sort_order = 1 WHERE name = 'Grilled Liempo' AND category = 'Rice Meals';
+UPDATE menu_items SET sort_order = 2 WHERE name = 'Gourmet Chops' AND category = 'Rice Meals';
+UPDATE menu_items SET sort_order = 3 WHERE name = 'Korean Soy or Buffalo' AND category = 'Rice Meals';
+UPDATE menu_items SET sort_order = 4 WHERE name = 'Boneless Bangus' AND category = 'Rice Meals';
+-- Row 2 (Right to Left)
+UPDATE menu_items SET sort_order = 5 WHERE name = 'Chicken Poppers' AND category = 'Rice Meals';
+UPDATE menu_items SET sort_order = 6 WHERE name = 'Fried Chicken' AND category = 'Rice Meals';
+UPDATE menu_items SET sort_order = 7 WHERE name = 'Fish Fillet' AND category = 'Rice Meals';
+UPDATE menu_items SET sort_order = 8 WHERE name = 'Grilled Chicken' AND category = 'Rice Meals';
+-- Row 3 (Right to Left)
+UPDATE menu_items SET sort_order = 9 WHERE name = 'Salisbury Steak' AND category = 'Rice Meals';
+UPDATE menu_items SET sort_order = 10 WHERE name = 'Mushroom Steak' AND category = 'Rice Meals';
+UPDATE menu_items SET sort_order = 11 WHERE name = 'Hungarian or Buffalo' AND category = 'Rice Meals';
+UPDATE menu_items SET sort_order = 12 WHERE name = 'Chicken Fillet' AND category = 'Rice Meals';
+
+-- Insert/Update categories (if categories table exists)
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'categories') THEN
+    -- Insert Firehouse Pizzeria categories
+    INSERT INTO categories (id, name, icon, sort_order, active) VALUES
+      ('starters', 'Starters', '🍽️', 1, true),
+      ('salads', 'Salads', '🥗', 2, true),
+      ('burgers', 'Burgers', '🍔', 3, true),
+      ('pizza', 'Pizza', '🍕', 4, true),
+      ('wings', 'Wings', '🍗', 5, true),
+      ('sandwiches', 'Sandwiches', '🥪', 6, true),
+      ('pasta', 'Pasta', '🍝', 7, true),
+      ('solo-meals', 'Solo Meals', '🍚', 8, true),
+      ('batangas-lomi', 'Batangas Lomi', '🍜', 9, true),
+      ('cold-beverages', 'Cold Beverages', '🥤', 10, true),
+      ('hot-beverages', 'Hot Beverages', '☕', 11, true),
+      ('frappe', 'Frappe', '🧋', 12, true),
+      ('beer', 'Beer', '🍺', 13, true),
+      ('breakfast', 'Breakfast', '🍳', 14, true),
+      ('rice-meals', 'Rice Meals', '🍛', 15, true)
+    ON CONFLICT (id) DO UPDATE SET
+      sort_order = EXCLUDED.sort_order,
+      active = EXCLUDED.active;
+  END IF;
+END $$;
 
 -- Create variations table
 CREATE TABLE IF NOT EXISTS variations (
@@ -203,20 +361,20 @@ END $$;
 
 -- Update existing menu items or insert new ones (prevent duplicates)
 -- Items without variations/add-ons
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Cheesy Nachos', 'Crispy tortilla chips topped with melted cheese and served with salsa', 115.00, 'Starters', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Cheesy Nachos', 'Crispy tortilla chips topped with melted cheese and served with salsa', 115.00, 'Starters', false, true, null, null, null, null, false, 1, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Cheesy Nachos');
 
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Taco Bites', 'Mini tacos filled with seasoned meat and fresh vegetables', 80.00, 'Starters', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Taco Bites', 'Mini tacos filled with seasoned meat and fresh vegetables', 80.00, 'Starters', false, true, null, null, null, null, false, 2, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Taco Bites');
 
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Snack Platter', 'A combination of nachos, mojos, and fries - perfect for sharing', 325.00, 'Starters', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Snack Platter', 'A combination of nachos, mojos, and fries - perfect for sharing', 325.00, 'Starters', false, true, null, null, null, null, false, 5, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Snack Platter');
 
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Cheese Quesadilla', 'Warm tortilla filled with melted cheese and served with sour cream', 135.00, 'Starters', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Cheese Quesadilla', 'Warm tortilla filled with melted cheese and served with sour cream', 135.00, 'Starters', false, true, null, null, null, null, false, 6, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Cheese Quesadilla');
 
 -- Update existing TORTIZZA items (remove NEW prefix)
@@ -225,8 +383,8 @@ SET name = 'TORTIZZA', description = 'Our signature tortilla pizza with fresh to
 WHERE name LIKE '%TORTIZZA%' OR name LIKE '%NEW TORTIZZA%';
 
 -- Insert TORTIZZA if it doesn't exist
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'TORTIZZA', 'Our signature tortilla pizza with fresh toppings', 165.00, 'Starters', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'TORTIZZA', 'Our signature tortilla pizza with fresh toppings', 165.00, 'Starters', false, true, null, null, null, null, false, 7, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'TORTIZZA');
 
 -- Update existing Double Cheese Bread items (remove NEW prefix)
@@ -235,25 +393,25 @@ SET name = 'Double Cheese Bread', description = 'Fresh bread loaded with double 
 WHERE name LIKE '%Double Cheese Bread%' OR name LIKE '%NEW Double Cheese Bread%';
 
 -- Insert Double Cheese Bread if it doesn't exist
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Double Cheese Bread', 'Fresh bread loaded with double cheese and herbs', 145.00, 'Starters', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Double Cheese Bread', 'Fresh bread loaded with double cheese and herbs', 145.00, 'Starters', false, true, null, null, null, null, false, 8, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Double Cheese Bread');
 
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Onion Rings', 'Crispy golden onion rings served with dipping sauce', 180.00, 'Starters', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Onion Rings', 'Crispy golden onion rings served with dipping sauce', 180.00, 'Starters', false, true, null, null, null, null, false, 9, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Onion Rings');
 
 -- Items with variations
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'French Fries', 'Golden crispy french fries, perfectly seasoned', 75.00, 'Starters', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'French Fries', 'Golden crispy french fries, perfectly seasoned', 75.00, 'Starters', false, true, null, null, null, null, false, 3, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'French Fries');
 
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Mojitos', 'Refreshing mint mojito cocktail', 105.00, 'Starters', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Mojitos', 'Refreshing mint mojito cocktail', 105.00, 'Starters', false, true, null, null, null, null, false, 4, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Mojitos');
 
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Chicken n'' Fish Chips', 'Tender chicken and fish served with crispy chips', 225.00, 'Starters', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Chicken n'' Fish Chips', 'Tender chicken and fish served with crispy chips', 225.00, 'Starters', false, true, null, null, null, null, false, 10, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Chicken n'' Fish Chips');
 
 -- Add variations for French Fries (75/225)
@@ -362,16 +520,16 @@ AND id NOT IN (
 -- No add-ons for starter items - they are served as standard items
 
 -- Add Salad Menu Items (prevent duplicates)
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Green Tossed Salad', 'A fresh, vibrant dish made up of a variety of crisp, leafy greens, typically including romaine, iceberg lightly dressed with our creamy home based salad dressing topped with pineapple, onion, cucumber, tomato, black olives, carrots and croutons sprinkle with cheese on top', 150.00, 'Salads', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Green Tossed Salad', 'A fresh, vibrant dish made up of a variety of crisp, leafy greens, typically including romaine, iceberg lightly dressed with our creamy home based salad dressing topped with pineapple, onion, cucumber, tomato, black olives, carrots and croutons sprinkle with cheese on top', 150.00, 'Salads', false, true, null, null, null, null, false, 1, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Green Tossed Salad');
 
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Firehouse Salad', 'Firehouse salad is a fresh, vibrant dish made up of a variety of crisp, leafy greens, typically including romaine, iceberg lightly dressed with our creamy home based salad dressing topped with pineapple, onion, cucumber, tomato, carrots and croutons sprinkle with cheese on top addition of Boiled egg and Sweet Ham', 180.00, 'Salads', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Firehouse Salad', 'Firehouse salad is a fresh, vibrant dish made up of a variety of crisp, leafy greens, typically including romaine, iceberg lightly dressed with our creamy home based salad dressing topped with pineapple, onion, cucumber, tomato, carrots and croutons sprinkle with cheese on top addition of Boiled egg and Sweet Ham', 180.00, 'Salads', false, true, null, null, null, null, false, 2, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Firehouse Salad');
 
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Paradise Salad', 'A fresh bed of crisp romaine and ice berg with fresh vegetables such as cucumber, tomato, onion, korn kernel, pineapple, carrot topped with croutons and Chicken Chunks and Bacon Bits and raisins. Dressing: Roasted Sesame', 215.00, 'Salads', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Paradise Salad', 'A fresh bed of crisp romaine and ice berg with fresh vegetables such as cucumber, tomato, onion, korn kernel, pineapple, carrot topped with croutons and Chicken Chunks and Bacon Bits and raisins. Dressing: Roasted Sesame', 215.00, 'Salads', false, true, null, null, null, null, false, 3, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Paradise Salad');
 
 -- Salad variations removed - salads will be simple without variations
@@ -392,49 +550,50 @@ WHERE menu_item_id IN (
 );
 
 -- Add Burger Menu Items (prevent duplicates)
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Classic Burger', 'Juicy beef patty with fresh lettuce, tomato, and our signature sauce', 95.00, 'Burgers', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Classic Burger', 'Juicy beef patty with fresh lettuce, tomato, and our signature sauce', 95.00, 'Burgers', false, true, null, null, null, null, false, 1, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Classic Burger');
 
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Bacon & Mushroom', 'Delicious burger topped with crispy bacon and sautéed mushrooms', 170.00, 'Burgers', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Bacon & Mushroom', 'Delicious burger topped with crispy bacon and sautéed mushrooms', 170.00, 'Burgers', false, true, null, null, null, null, false, 2, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Bacon & Mushroom');
 
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Jalapeno', 'Spicy burger with jalapeno peppers and pepper jack cheese', 180.00, 'Burgers', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Jalapeno', 'Spicy burger with jalapeno peppers and pepper jack cheese', 180.00, 'Burgers', false, true, null, null, null, null, false, 3, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Jalapeno');
 
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'B-L-T', 'Classic bacon, lettuce, and tomato burger with mayo', 180.00, 'Burgers', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'B-L-T', 'Classic bacon, lettuce, and tomato burger with mayo', 180.00, 'Burgers', false, true, null, null, null, null, false, 4, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'B-L-T');
 
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Firehouse Paradise', 'Our signature burger with all the best toppings', 195.00, 'Burgers', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Firehouse Paradise', 'Our signature burger with all the best toppings', 195.00, 'Burgers', false, true, null, null, null, null, false, 5, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Firehouse Paradise');
 
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Sliders Burger', 'Mini burger with fries - perfect for sharing', 245.00, 'Burgers', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Sliders Burger', 'Mini burger with fries - perfect for sharing', 245.00, 'Burgers', false, true, null, null, null, null, false, 6, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Sliders Burger');
 
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Double Decker', 'Double beef patties with double cheese and special sauce', 295.00, 'Burgers', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Double Decker', 'Double beef patties with double cheese and special sauce', 295.00, 'Burgers', false, true, null, null, null, null, false, 7, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Double Decker');
 
 -- Add Pizza Menu Items (with size variations)
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Supreme Cheese', 'Classic pizza loaded with mozzarella and cheddar cheese', 185.00, 'Pizza', false, true, null, null, null, null, false, now(), now()
+-- Classic Flavor Pizzas
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Supreme Cheese', 'Classic pizza loaded with mozzarella and cheddar cheese', 185.00, 'Pizza', false, true, null, null, null, null, false, 1, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Supreme Cheese');
 
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Bacon & Cheese', 'Crispy bacon with melted cheese on our signature crust', 195.00, 'Pizza', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Bacon & Cheese', 'Crispy bacon with melted cheese on our signature crust', 195.00, 'Pizza', false, true, null, null, null, null, false, 2, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Bacon & Cheese');
 
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Classic Aloha', 'Hawaiian-style pizza with ham and pineapple', 205.00, 'Pizza', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Classic Aloha', 'Hawaiian-style pizza with ham and pineapple', 205.00, 'Pizza', false, true, null, null, null, null, false, 3, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Classic Aloha');
 
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Vegan Lover', 'Plant-based pizza with vegan cheese and fresh vegetables', 215.00, 'Pizza', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Vegan Lover', 'Plant-based pizza with vegan cheese and fresh vegetables', 215.00, 'Pizza', false, true, null, null, null, null, false, 4, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Vegan Lover');
 
 -- Add Pizza Size Variations (Small and Large)
@@ -483,28 +642,28 @@ WHERE mi.name = 'Vegan Lover'
 AND NOT EXISTS (SELECT 1 FROM variations v WHERE v.menu_item_id = mi.id AND v.name = 'Large');
 
 -- Add Supreme Flavor Pizza Menu Items (with size variations)
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Ultimate Aloha', 'Premium Hawaiian pizza with premium ham and pineapple', 230.00, 'Pizza', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Ultimate Aloha', 'Premium Hawaiian pizza with premium ham and pineapple', 230.00, 'Pizza', false, true, null, null, null, null, false, 5, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Ultimate Aloha');
 
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Pepperoni & Bacon', 'Classic pepperoni with crispy bacon on our signature crust', 275.00, 'Pizza', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Pepperoni & Bacon', 'Classic pepperoni with crispy bacon on our signature crust', 275.00, 'Pizza', false, true, null, null, null, null, false, 6, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Pepperoni & Bacon');
 
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Tuna Jalapeno', 'Fresh tuna with spicy jalapeno peppers and cheese', 325.00, 'Pizza', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Tuna Jalapeno', 'Fresh tuna with spicy jalapeno peppers and cheese', 325.00, 'Pizza', false, true, null, null, null, null, false, 7, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Tuna Jalapeno');
 
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Gurus Choice', 'Our chef''s special selection of premium toppings', 325.00, 'Pizza', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Gurus Choice', 'Our chef''s special selection of premium toppings', 325.00, 'Pizza', false, true, null, null, null, null, false, 8, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Gurus Choice');
 
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Meat Overload', 'Loaded with all your favorite meats and cheese', 345.00, 'Pizza', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Meat Overload', 'Loaded with all your favorite meats and cheese', 345.00, 'Pizza', false, true, null, null, null, null, false, 9, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Meat Overload');
 
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Pick of the Bunch', 'A delightful mix of our best ingredients', 345.00, 'Pizza', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Pick of the Bunch', 'A delightful mix of our best ingredients', 345.00, 'Pizza', false, true, null, null, null, null, false, 10, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Pick of the Bunch');
 
 -- Add Supreme Flavor Pizza Size Variations
@@ -575,62 +734,62 @@ WHERE mi.name = 'Pick of the Bunch'
 AND NOT EXISTS (SELECT 1 FROM variations v WHERE v.menu_item_id = mi.id AND v.name = 'Large');
 
 -- Add Wings Menu Items (prevent duplicates)
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Plain Wings', 'Crispy chicken wings served plain', 250.00, 'Wings', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Plain Wings', 'Crispy chicken wings served plain', 250.00, 'Wings', false, true, null, null, null, null, false, 1, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Plain Wings');
 
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Parmesan Wings', 'Chicken wings coated with parmesan cheese', 260.00, 'Wings', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Parmesan Wings', 'Chicken wings coated with parmesan cheese', 260.00, 'Wings', false, true, null, null, null, null, false, 2, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Parmesan Wings');
 
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Korean Soy Wings', 'Asian-inspired wings with Korean soy glaze', 260.00, 'Wings', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Korean Soy Wings', 'Asian-inspired wings with Korean soy glaze', 260.00, 'Wings', false, true, null, null, null, null, false, 3, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Korean Soy Wings');
 
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Buffalo Wings', 'Classic spicy buffalo wings with ranch dip', 260.00, 'Wings', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Buffalo Wings', 'Classic spicy buffalo wings with ranch dip', 260.00, 'Wings', false, true, null, null, null, null, false, 4, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Buffalo Wings');
 
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Trio Wings', 'Three different flavors of wings in one order', 750.00, 'Wings', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Trio Wings', 'Three different flavors of wings in one order', 750.00, 'Wings', false, true, null, null, null, null, false, 5, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Trio Wings');
 
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Medium Tray Wings', 'Medium tray of assorted wings for sharing', 1250.00, 'Wings', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Medium Tray Wings', 'Medium tray of assorted wings for sharing', 1250.00, 'Wings', false, true, null, null, null, null, false, 6, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Medium Tray Wings');
 
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Large Tray Wings', 'Large tray of assorted wings for big groups', 2250.00, 'Wings', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Large Tray Wings', 'Large tray of assorted wings for big groups', 2250.00, 'Wings', false, true, null, null, null, null, false, 7, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Large Tray Wings');
 
 -- Add Sandwich Menu Items (prevent duplicates)
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Clubhouse Sandwich', 'Classic clubhouse with turkey, bacon, lettuce, and tomato', 170.00, 'Sandwiches', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Clubhouse Sandwich', 'Classic clubhouse with turkey, bacon, lettuce, and tomato', 170.00, 'Sandwiches', false, true, null, null, null, null, false, 1, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Clubhouse Sandwich');
 
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Chicken Sandwich', 'Grilled chicken breast with fresh vegetables and sauce', 150.00, 'Sandwiches', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Chicken Sandwich', 'Grilled chicken breast with fresh vegetables and sauce', 150.00, 'Sandwiches', false, true, null, null, null, null, false, 2, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Chicken Sandwich');
 
 -- Add Pasta Menu Items (with portion variations)
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Pinoy Spaghetti', 'Filipino-style sweet spaghetti with hotdog and cheese', 75.00, 'Pasta', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Pinoy Spaghetti', 'Filipino-style sweet spaghetti with hotdog and cheese', 75.00, 'Pasta', false, true, null, null, null, null, false, 1, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Pinoy Spaghetti');
 
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Carbonara', 'Creamy pasta with bacon and parmesan cheese', 105.00, 'Pasta', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Carbonara', 'Creamy pasta with bacon and parmesan cheese', 105.00, 'Pasta', false, true, null, null, null, null, false, 2, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Carbonara');
 
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Tuna Basil', 'Fresh tuna with basil and olive oil pasta', 105.00, 'Pasta', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Tuna Basil', 'Fresh tuna with basil and olive oil pasta', 105.00, 'Pasta', false, true, null, null, null, null, false, 3, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Tuna Basil');
 
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Baked Macaroni', 'Creamy macaroni topped with cheese and baked to perfection', 135.00, 'Pasta', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Baked Macaroni', 'Creamy macaroni topped with cheese and baked to perfection', 135.00, 'Pasta', false, true, null, null, null, null, false, 4, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Baked Macaroni');
 
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Vietnamese Pasta', 'Vietnamese-inspired pasta with fresh herbs and spices', 150.00, 'Pasta', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Vietnamese Pasta', 'Vietnamese-inspired pasta with fresh herbs and spices', 150.00, 'Pasta', false, true, null, null, null, null, false, 5, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Vietnamese Pasta');
 
 -- Add Pasta Portion Variations (Solo and Sharing)
@@ -690,29 +849,29 @@ WHERE mi.name = 'Vietnamese Pasta'
 AND NOT EXISTS (SELECT 1 FROM variations v WHERE v.menu_item_id = mi.id AND v.name = 'Sharing');
 
 -- Add Solo Meals Menu Items (prevent duplicates)
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'GOURMET 1', 'Pinoy Style Spaghetti, Ham & Egg Sandwich with fries and drinks. Upgrade +10 BURGER', 225.00, 'Solo Meals', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'GOURMET 1', 'Pinoy Style Spaghetti, Ham & Egg Sandwich with fries and drinks. Upgrade +10 BURGER', 225.00, 'Solo Meals', false, true, null, null, null, null, false, 1, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'GOURMET 1');
 
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'GOURMET 2', 'Pinoy Style Spaghetti, 2 slices Pizza with fries and drinks', 235.00, 'Solo Meals', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'GOURMET 2', 'Pinoy Style Spaghetti, 2 slices Pizza with fries and drinks', 235.00, 'Solo Meals', false, true, null, null, null, null, false, 2, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'GOURMET 2');
 
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'GOURMET 3', 'Pinoy Style Spaghetti, Chicken Sandwich with fries and drinks', 235.00, 'Solo Meals', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'GOURMET 3', 'Pinoy Style Spaghetti, Chicken Sandwich with fries and drinks', 235.00, 'Solo Meals', false, true, null, null, null, null, false, 3, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'GOURMET 3');
 
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'GOURMET 4', 'Cheesy Baked Mac, Classic Burger with drinks', 255.00, 'Solo Meals', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'GOURMET 4', 'Cheesy Baked Mac, Classic Burger with drinks', 255.00, 'Solo Meals', false, true, null, null, null, null, false, 4, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'GOURMET 4');
 
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'GOURMET 5', 'Pinoy Style Spaghetti, Plain Fried Chicken with fries and drinks', 245.00, 'Solo Meals', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'GOURMET 5', 'Pinoy Style Spaghetti, Plain Fried Chicken with fries and drinks', 245.00, 'Solo Meals', false, true, null, null, null, null, false, 5, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'GOURMET 5');
 
 -- Add Batangas Lomi Menu Items (with size variations)
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Batangas Lomi', 'Lomi noodles from Batangas are comfort food known for their rich, hearty broth and thick, chewy noodles', 130.00, 'Batangas Lomi', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Batangas Lomi', 'Lomi noodles from Batangas are comfort food known for their rich, hearty broth and thick, chewy noodles', 130.00, 'Batangas Lomi', false, true, null, null, null, null, false, 1, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Batangas Lomi');
 
 -- Add Batangas Lomi Size Variations (Solo and Jumbo)
@@ -728,53 +887,53 @@ WHERE mi.name = 'Batangas Lomi'
 AND NOT EXISTS (SELECT 1 FROM variations v WHERE v.menu_item_id = mi.id AND v.name = 'Jumbo');
 
 -- Add Frappe Menu Items (prevent duplicates)
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Java Chip Frappe', 'Rich coffee frappe with chocolate chips', 95.00, 'Frappe', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Java Chip Frappe', 'Rich coffee frappe with chocolate chips', 95.00, 'Frappe', false, true, null, null, null, null, false, 1, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Java Chip Frappe');
 
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Mocha Frappe', 'Classic mocha frappe with chocolate and coffee', 95.00, 'Frappe', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Mocha Frappe', 'Classic mocha frappe with chocolate and coffee', 95.00, 'Frappe', false, true, null, null, null, null, false, 2, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Mocha Frappe');
 
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Chocolate Frappe', 'Rich chocolate frappe blended to perfection', 95.00, 'Frappe', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Chocolate Frappe', 'Rich chocolate frappe blended to perfection', 95.00, 'Frappe', false, true, null, null, null, null, false, 3, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Chocolate Frappe');
 
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Cookies and Cream Frappe', 'Creamy frappe with cookies and cream flavor', 120.00, 'Frappe', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Cookies and Cream Frappe', 'Creamy frappe with cookies and cream flavor', 120.00, 'Frappe', false, true, null, null, null, null, false, 4, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Cookies and Cream Frappe');
 
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Caramel Macchiato Frappe', 'Smooth frappe with caramel and macchiato flavors', 120.00, 'Frappe', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Caramel Macchiato Frappe', 'Smooth frappe with caramel and macchiato flavors', 120.00, 'Frappe', false, true, null, null, null, null, false, 5, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Caramel Macchiato Frappe');
 
 -- Add Cold Beverages Menu Items (with flavor variations)
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Soda in Can', 'Refreshing soda in can', 55.00, 'Cold Beverages', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Soda in Can', 'Refreshing soda in can', 55.00, 'Cold Beverages', false, true, null, null, null, null, false, 1, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Soda in Can');
 
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Soda 1.5L', 'Large bottle of refreshing soda', 95.00, 'Cold Beverages', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Soda 1.5L', 'Large bottle of refreshing soda', 95.00, 'Cold Beverages', false, true, null, null, null, null, false, 2, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Soda 1.5L');
 
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Juice', 'Fresh fruit juice', 55.00, 'Cold Beverages', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Juice', 'Fresh fruit juice', 55.00, 'Cold Beverages', false, true, null, null, null, null, false, 3, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Juice');
 
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Solo', 'Refreshing solo drink', 55.00, 'Cold Beverages', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Solo', 'Refreshing solo drink', 55.00, 'Cold Beverages', false, true, null, null, null, null, false, 4, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Solo');
 
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Pitcher', 'Large pitcher of refreshing drink', 165.00, 'Cold Beverages', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Pitcher', 'Large pitcher of refreshing drink', 165.00, 'Cold Beverages', false, true, null, null, null, null, false, 5, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Pitcher');
 
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Pineapple Juice', 'Fresh pineapple juice', 55.00, 'Cold Beverages', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Pineapple Juice', 'Fresh pineapple juice', 55.00, 'Cold Beverages', false, true, null, null, null, null, false, 6, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Pineapple Juice');
 
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Bottled Water 500ml', 'Pure bottled water', 25.00, 'Cold Beverages', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Bottled Water 500ml', 'Pure bottled water', 25.00, 'Cold Beverages', false, true, null, null, null, null, false, 7, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Bottled Water 500ml');
 
 -- Add Cold Beverages Flavor Variations
@@ -892,95 +1051,98 @@ WHERE mi.name = 'Juice'
 AND NOT EXISTS (SELECT 1 FROM variations v WHERE v.menu_item_id = mi.id AND v.name = 'Citrus Dew');
 
 -- Add Hot Beverages Menu Items (prevent duplicates)
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Kapeng Barako', 'Strong Filipino coffee from Batangas', 85.00, 'Hot Beverages', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Kapeng Barako', 'Strong Filipino coffee from Batangas', 85.00, 'Hot Beverages', false, true, null, null, null, null, false, 1, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Kapeng Barako');
 
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Honey Lemon Tea', 'Warm and soothing honey lemon tea', 120.00, 'Hot Beverages', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Honey Lemon Tea', 'Warm and soothing honey lemon tea', 120.00, 'Hot Beverages', false, true, null, null, null, null, false, 2, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Honey Lemon Tea');
 
 -- Add Beer Menu Items (prevent duplicates)
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'San Mig Light in Can', 'Light beer in can', 75.00, 'Beer', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'San Mig Light in Can', 'Light beer in can', 75.00, 'Beer', false, true, null, null, null, null, false, 1, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'San Mig Light in Can');
 
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Bucket Beer', 'Large bucket of beer for sharing', 430.00, 'Beer', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Bucket Beer', 'Large bucket of beer for sharing', 430.00, 'Beer', false, true, null, null, null, null, false, 2, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Bucket Beer');
 
 -- Add Breakfast Menu Items (prevent duplicates)
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Liempo Silog', 'Grilled pork belly with garlic rice and egg', 180.00, 'Breakfast', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Liempo Silog', 'Grilled pork belly with garlic rice and egg', 180.00, 'Breakfast', false, true, null, null, null, null, false, 1, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Liempo Silog');
 
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Bangus Silog', 'Grilled milkfish with garlic rice and egg', 165.00, 'Breakfast', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Bangus Silog', 'Grilled milkfish with garlic rice and egg', 165.00, 'Breakfast', false, true, null, null, null, null, false, 2, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Bangus Silog');
 
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Bacon Silog', 'Crispy bacon with garlic rice and egg', 155.00, 'Breakfast', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Bacon Silog', 'Crispy bacon with garlic rice and egg', 155.00, 'Breakfast', false, true, null, null, null, null, false, 3, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Bacon Silog');
 
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Ham Silog', 'Sliced ham with garlic rice and egg', 155.00, 'Breakfast', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Ham Silog', 'Sliced ham with garlic rice and egg', 155.00, 'Breakfast', false, true, null, null, null, null, false, 4, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Ham Silog');
 
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Tinapa Silog', 'Smoked fish with garlic rice and egg', 115.00, 'Breakfast', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Tinapa Silog', 'Smoked fish with garlic rice and egg', 115.00, 'Breakfast', false, true, null, null, null, null, false, 5, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Tinapa Silog');
 
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Danggit Silog', 'Dried fish with garlic rice and egg', 165.00, 'Breakfast', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Danggit Silog', 'Dried fish with garlic rice and egg', 165.00, 'Breakfast', false, true, null, null, null, null, false, 6, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Danggit Silog');
 
 -- Add Rice Meals Menu Items (with some variations)
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Grilled Liempo', 'Grilled pork belly with rice. UPGRADE +P35 UNLI RICE. FREE 12OZ DRINK', 180.00, 'Rice Meals', false, true, null, null, null, null, false, now(), now()
+-- Row 1 (Right to Left): Grilled Liempo, Gourmet Chops, Korean Soy or Buffalo, Boneless Bangus
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Grilled Liempo', 'Grilled pork belly with rice. UPGRADE +P35 UNLI RICE. FREE 12OZ DRINK', 180.00, 'Rice Meals', false, true, null, null, null, null, false, 1, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Grilled Liempo');
 
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Gourmet Chops', 'Premium pork chops with rice. UPGRADE +P35 UNLI RICE. FREE 12OZ DRINK', 180.00, 'Rice Meals', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Gourmet Chops', 'Premium pork chops with rice. UPGRADE +P35 UNLI RICE. FREE 12OZ DRINK', 180.00, 'Rice Meals', false, true, null, null, null, null, false, 2, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Gourmet Chops');
 
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Korean Soy or Buffalo', 'Korean soy or buffalo flavored dish with rice. UPGRADE +P35 UNLI RICE. FREE 12OZ DRINK', 155.00, 'Rice Meals', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Korean Soy or Buffalo', 'Korean soy or buffalo flavored dish with rice. UPGRADE +P35 UNLI RICE. FREE 12OZ DRINK', 155.00, 'Rice Meals', false, true, null, null, null, null, false, 3, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Korean Soy or Buffalo');
 
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Boneless Bangus', 'Boneless milkfish with rice. UPGRADE +P35 UNLI RICE. FREE 12OZ DRINK', 165.00, 'Rice Meals', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Boneless Bangus', 'Boneless milkfish with rice. UPGRADE +P35 UNLI RICE. FREE 12OZ DRINK', 165.00, 'Rice Meals', false, true, null, null, null, null, false, 4, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Boneless Bangus');
 
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Chicken Poppers', 'Crispy chicken poppers with rice. UPGRADE +P35 UNLI RICE. FREE 12OZ DRINK', 129.00, 'Rice Meals', false, true, null, null, null, null, false, now(), now()
+-- Row 2 (Right to Left): Chicken Poppers, Fried Chicken, Fish Fillet, Grilled Chicken
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Chicken Poppers', 'Crispy chicken poppers with rice. UPGRADE +P35 UNLI RICE. FREE 12OZ DRINK', 129.00, 'Rice Meals', false, true, null, null, null, null, false, 5, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Chicken Poppers');
 
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Fried Chicken', 'Crispy fried chicken with rice. UPGRADE +P35 UNLI RICE. FREE 12OZ DRINK', 150.00, 'Rice Meals', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Fried Chicken', 'Crispy fried chicken with rice. UPGRADE +P35 UNLI RICE. FREE 12OZ DRINK', 150.00, 'Rice Meals', false, true, null, null, null, null, false, 6, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Fried Chicken');
 
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Fish Fillet', 'Breaded fish fillet with rice. UPGRADE +P35 UNLI RICE. FREE 12OZ DRINK', 155.00, 'Rice Meals', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Fish Fillet', 'Breaded fish fillet with rice. UPGRADE +P35 UNLI RICE. FREE 12OZ DRINK', 155.00, 'Rice Meals', false, true, null, null, null, null, false, 7, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Fish Fillet');
 
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Grilled Chicken', 'Grilled chicken breast with rice. UPGRADE +P35 UNLI RICE. FREE 12OZ DRINK', 145.00, 'Rice Meals', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Grilled Chicken', 'Grilled chicken breast with rice. UPGRADE +P35 UNLI RICE. FREE 12OZ DRINK', 145.00, 'Rice Meals', false, true, null, null, null, null, false, 8, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Grilled Chicken');
 
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Salisbury Steak', 'Beef salisbury steak with rice. UPGRADE +P35 UNLI RICE. FREE 12OZ DRINK', 150.00, 'Rice Meals', false, true, null, null, null, null, false, now(), now()
+-- Row 3 (Right to Left): Salisbury Steak, Mushroom Steak, Hungarian or Buffalo, Chicken Fillet
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Salisbury Steak', 'Beef salisbury steak with rice. UPGRADE +P35 UNLI RICE. FREE 12OZ DRINK', 150.00, 'Rice Meals', false, true, null, null, null, null, false, 9, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Salisbury Steak');
 
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Mushroom Steak', 'Mushroom steak with rice. UPGRADE +P35 UNLI RICE. FREE 12OZ DRINK', 150.00, 'Rice Meals', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Mushroom Steak', 'Mushroom steak with rice. UPGRADE +P35 UNLI RICE. FREE 12OZ DRINK', 150.00, 'Rice Meals', false, true, null, null, null, null, false, 10, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Mushroom Steak');
 
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Hungarian or Buffalo', 'Hungarian or buffalo flavored dish with rice. UPGRADE +P35 UNLI RICE. FREE 12OZ DRINK', 160.00, 'Rice Meals', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Hungarian or Buffalo', 'Hungarian or buffalo flavored dish with rice. UPGRADE +P35 UNLI RICE. FREE 12OZ DRINK', 160.00, 'Rice Meals', false, true, null, null, null, null, false, 11, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Hungarian or Buffalo');
 
-INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at)
-SELECT gen_random_uuid(), 'Chicken Fillet', 'Breaded chicken fillet with rice. UPGRADE +P35 UNLI RICE. FREE 12OZ DRINK', 155.00, 'Rice Meals', false, true, null, null, null, null, false, now(), now()
+INSERT INTO menu_items (id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, sort_order, created_at, updated_at)
+SELECT gen_random_uuid(), 'Chicken Fillet', 'Breaded chicken fillet with rice. UPGRADE +P35 UNLI RICE. FREE 12OZ DRINK', 155.00, 'Rice Meals', false, true, null, null, null, null, false, 12, now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Chicken Fillet');
 
 -- Add Rice Meals Variations
