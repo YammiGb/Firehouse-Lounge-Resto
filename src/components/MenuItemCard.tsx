@@ -1,23 +1,17 @@
 import React, { useState } from 'react';
-import { Plus, Minus, X, ShoppingCart } from 'lucide-react';
+import { X, ShoppingCart } from 'lucide-react';
 import { MenuItem, Variation, AddOn } from '../types';
 
 interface MenuItemCardProps {
   item: MenuItem;
   onAddToCart: (item: MenuItem, quantity?: number, variation?: Variation, addOns?: AddOn[]) => void;
-  quantity: number;
-  onUpdateQuantity: (id: string, quantity: number) => void;
   categoryEmoji?: string;
-  cartItemId?: string;
 }
 
 const MenuItemCard: React.FC<MenuItemCardProps> = ({ 
   item, 
   onAddToCart, 
-  quantity, 
-  onUpdateQuantity,
-  categoryEmoji,
-  cartItemId
+  categoryEmoji
 }) => {
   const [showCustomization, setShowCustomization] = useState(false);
   const [selectedVariation, setSelectedVariation] = useState<Variation | undefined>(
@@ -57,21 +51,6 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
     setSelectedAddOns([]);
   };
 
-  const handleIncrement = () => {
-    if (cartItemId) {
-      // If we have a cartItemId, update that specific cart item
-      onUpdateQuantity(cartItemId, quantity + 1);
-    } else {
-      // If no cartItemId, this is a new item - add it to cart
-      onAddToCart(item, 1);
-    }
-  };
-
-  const handleDecrement = () => {
-    if (quantity > 0 && cartItemId) {
-      onUpdateQuantity(cartItemId, quantity - 1);
-    }
-  };
 
   const updateAddOnQuantity = (addOn: AddOn, quantity: number) => {
     setSelectedAddOns(prev => {
@@ -210,31 +189,13 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
                 >
                   Unavailable
                 </button>
-              ) : quantity === 0 ? (
+              ) : (
                 <button
                   onClick={handleAddToCart}
                   className="bg-gradient-to-r from-firehouse-yellow to-firehouse-yellow-light text-firehouse-charcoal px-6 py-2.5 rounded-xl hover:from-firehouse-yellow-dark hover:to-firehouse-yellow transition-all duration-200 transform hover:scale-105 font-bold text-sm shadow-lg hover:shadow-xl"
                 >
                   {item.variations?.length || item.addOns?.length ? 'Customize' : 'Add to Cart'}
                 </button>
-              ) : (
-                <div className="flex items-center space-x-2 bg-gradient-to-r from-firehouse-yellow/20 to-firehouse-yellow-light/20 rounded-xl p-1 border border-firehouse-yellow/30">
-                  {quantity > 1 && (
-                    <button
-                      onClick={handleDecrement}
-                      className="p-2 hover:bg-firehouse-yellow/30 rounded-lg transition-colors duration-200 hover:scale-110"
-                    >
-                      <Minus className="h-4 w-4 text-firehouse-charcoal" />
-                    </button>
-                  )}
-                  <span className={`font-bold text-firehouse-charcoal min-w-[28px] text-center text-sm ${quantity === 1 ? 'px-2' : ''}`}>{quantity}</span>
-                  <button
-                    onClick={handleIncrement}
-                    className="p-2 hover:bg-firehouse-yellow/30 rounded-lg transition-colors duration-200 hover:scale-110"
-                  >
-                    <Plus className="h-4 w-4 text-firehouse-charcoal" />
-                  </button>
-                </div>
               )}
             </div>
           </div>

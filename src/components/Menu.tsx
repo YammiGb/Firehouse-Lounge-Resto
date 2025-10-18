@@ -16,12 +16,10 @@ const preloadImages = (items: MenuItem[]) => {
 interface MenuProps {
   menuItems: MenuItem[];
   addToCart: (item: MenuItem, quantity?: number, variation?: any, addOns?: any[]) => void;
-  cartItems: CartItem[];
-  updateQuantity: (id: string, quantity: number) => void;
   selectedCategory: string;
 }
 
-const Menu: React.FC<MenuProps> = ({ menuItems, addToCart, cartItems, updateQuantity, selectedCategory }) => {
+const Menu: React.FC<MenuProps> = ({ menuItems, addToCart, selectedCategory }) => {
   const { categories } = useCategories();
 
   // Preload images when menu items change
@@ -65,32 +63,14 @@ const Menu: React.FC<MenuProps> = ({ menuItems, addToCart, cartItems, updateQuan
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {categoryItems.map((item) => {
-                // Find all cart items that are based on this menu item
-                const relatedCartItems = cartItems.filter(cartItem => 
-                  cartItem.id.startsWith(`${item.id}-`)
-                );
-                
-                // Sum up quantities of all related cart items
-                const totalQuantity = relatedCartItems.reduce((sum, cartItem) => sum + cartItem.quantity, 0);
-                
-                // For simple items (no variations/addons), find the exact cart item
-                const simpleCartItem = relatedCartItems.find(cartItem => 
-                  !cartItem.selectedVariation && (!cartItem.selectedAddOns || cartItem.selectedAddOns.length === 0)
-                );
-                
-                return (
-                  <MenuItemCard
-                    key={item.id}
-                    item={item}
-                    onAddToCart={addToCart}
-                    quantity={totalQuantity}
-                    onUpdateQuantity={updateQuantity}
-                    categoryEmoji={category.icon}
-                    cartItemId={simpleCartItem?.id}
-                  />
-                );
-              })}
+              {categoryItems.map((item) => (
+                <MenuItemCard
+                  key={item.id}
+                  item={item}
+                  onAddToCart={addToCart}
+                  categoryEmoji={category.icon}
+                />
+              ))}
             </div>
           </section>
         );

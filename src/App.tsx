@@ -37,8 +37,6 @@ function MainApp() {
         <Menu 
           menuItems={menuItems}
           addToCart={cart.addToCart}
-          cartItems={cart.cartItems}
-          updateQuantity={cart.updateQuantity}
           selectedCategory={selectedCategory}
         />
       )}
