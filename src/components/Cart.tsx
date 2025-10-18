@@ -93,13 +93,15 @@ const Cart: React.FC<CartProps> = ({
               <div className="flex items-center justify-between sm:justify-end gap-4 sm:gap-6">
                 {/* Quantity Controls */}
                 <div className="flex items-center space-x-3 bg-firehouse-yellow/20 rounded-full p-1 border border-firehouse-yellow/30">
-                  <button
-                    onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                    className="p-2 hover:bg-firehouse-yellow/30 rounded-full transition-colors duration-200"
-                  >
-                    <Minus className="h-4 w-4 text-firehouse-charcoal" />
-                  </button>
-                  <span className="font-semibold text-firehouse-charcoal min-w-[32px] text-center">{item.quantity}</span>
+                  {item.quantity > 1 && (
+                    <button
+                      onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                      className="p-2 hover:bg-firehouse-yellow/30 rounded-full transition-colors duration-200"
+                    >
+                      <Minus className="h-4 w-4 text-firehouse-charcoal" />
+                    </button>
+                  )}
+                  <span className={`font-semibold text-firehouse-charcoal min-w-[32px] text-center ${item.quantity === 1 ? 'px-2' : ''}`}>{item.quantity}</span>
                   <button
                     onClick={() => updateQuantity(item.id, item.quantity + 1)}
                     className="p-2 hover:bg-firehouse-yellow/30 rounded-full transition-colors duration-200"

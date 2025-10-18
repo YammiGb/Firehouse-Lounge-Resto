@@ -8,6 +8,7 @@ interface MenuItemCardProps {
   quantity: number;
   onUpdateQuantity: (id: string, quantity: number) => void;
   categoryEmoji?: string;
+  cartItemId?: string;
 }
 
 const MenuItemCard: React.FC<MenuItemCardProps> = ({ 
@@ -15,7 +16,8 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
   onAddToCart, 
   quantity, 
   onUpdateQuantity,
-  categoryEmoji 
+  categoryEmoji,
+  cartItemId
 }) => {
   const [showCustomization, setShowCustomization] = useState(false);
   const [selectedVariation, setSelectedVariation] = useState<Variation | undefined>(
@@ -56,12 +58,18 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
   };
 
   const handleIncrement = () => {
-    onUpdateQuantity(item.id, quantity + 1);
+    if (cartItemId) {
+      // If we have a cartItemId, update that specific cart item
+      onUpdateQuantity(cartItemId, quantity + 1);
+    } else {
+      // If no cartItemId, this is a new item - add it to cart
+      onAddToCart(item, 1);
+    }
   };
 
   const handleDecrement = () => {
-    if (quantity > 0) {
-      onUpdateQuantity(item.id, quantity - 1);
+    if (quantity > 0 && cartItemId) {
+      onUpdateQuantity(cartItemId, quantity - 1);
     }
   };
 
@@ -211,13 +219,15 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
                 </button>
               ) : (
                 <div className="flex items-center space-x-2 bg-gradient-to-r from-firehouse-yellow/20 to-firehouse-yellow-light/20 rounded-xl p-1 border border-firehouse-yellow/30">
-                  <button
-                    onClick={handleDecrement}
-                    className="p-2 hover:bg-firehouse-yellow/30 rounded-lg transition-colors duration-200 hover:scale-110"
-                  >
-                    <Minus className="h-4 w-4 text-firehouse-charcoal" />
-                  </button>
-                  <span className="font-bold text-firehouse-charcoal min-w-[28px] text-center text-sm">{quantity}</span>
+                  {quantity > 1 && (
+                    <button
+                      onClick={handleDecrement}
+                      className="p-2 hover:bg-firehouse-yellow/30 rounded-lg transition-colors duration-200 hover:scale-110"
+                    >
+                      <Minus className="h-4 w-4 text-firehouse-charcoal" />
+                    </button>
+                  )}
+                  <span className={`font-bold text-firehouse-charcoal min-w-[28px] text-center text-sm ${quantity === 1 ? 'px-2' : ''}`}>{quantity}</span>
                   <button
                     onClick={handleIncrement}
                     className="p-2 hover:bg-firehouse-yellow/30 rounded-lg transition-colors duration-200 hover:scale-110"

@@ -66,15 +66,28 @@ const Menu: React.FC<MenuProps> = ({ menuItems, addToCart, cartItems, updateQuan
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {categoryItems.map((item) => {
-                const cartItem = cartItems.find(cartItem => cartItem.id === item.id);
+                // Find all cart items that are based on this menu item
+                const relatedCartItems = cartItems.filter(cartItem => 
+                  cartItem.id.startsWith(`${item.id}-`)
+                );
+                
+                // Sum up quantities of all related cart items
+                const totalQuantity = relatedCartItems.reduce((sum, cartItem) => sum + cartItem.quantity, 0);
+                
+                // For simple items (no variations/addons), find the exact cart item
+                const simpleCartItem = relatedCartItems.find(cartItem => 
+                  !cartItem.selectedVariation && (!cartItem.selectedAddOns || cartItem.selectedAddOns.length === 0)
+                );
+                
                 return (
                   <MenuItemCard
                     key={item.id}
                     item={item}
                     onAddToCart={addToCart}
-                    quantity={cartItem?.quantity || 0}
+                    quantity={totalQuantity}
                     onUpdateQuantity={updateQuantity}
                     categoryEmoji={category.icon}
+                    cartItemId={simpleCartItem?.id}
                   />
                 );
               })}
