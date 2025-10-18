@@ -24,6 +24,9 @@ export const useMenu = () => {
 
       if (itemsError) throw itemsError;
 
+      // Auto-fix any items that might have incorrect sort orders
+      await autoFixSortOrders(items);
+
       const formattedItems: MenuItem[] = items?.map(item => {
         // Calculate if discount is currently active
         const now = new Date();
@@ -79,6 +82,18 @@ export const useMenu = () => {
 
   const addMenuItem = async (item: Omit<MenuItem, 'id'>) => {
     try {
+      // Get the highest sort_order to place new item at the end
+      const { data: maxSortData } = await supabase
+        .from('menu_items')
+        .select('sort_order')
+        .order('sort_order', { ascending: false })
+        .limit(1)
+        .single();
+      
+      // Ensure new items get a sort order that's definitely at the end
+      // Use a high base number to avoid conflicts with existing items
+      const nextSortOrder = Math.max((maxSortData?.sort_order || 0) + 1, 10000);
+
       console.log('Adding menu item with data:', {
         name: item.name,
         description: item.description,
@@ -90,8 +105,11 @@ export const useMenu = () => {
         discount_price: item.discountPrice || null,
         discount_start_date: item.discountStartDate || null,
         discount_end_date: item.discountEndDate || null,
-        discount_active: item.discountActive || false
+        discount_active: item.discountActive || false,
+        sort_order: nextSortOrder
       });
+      
+      console.log('Max sort order found:', maxSortData?.sort_order, 'Next sort order:', nextSortOrder);
 
       // Insert menu item
       const { data: menuItem, error: itemError } = await supabase
@@ -108,7 +126,7 @@ export const useMenu = () => {
           discount_start_date: item.discountStartDate || null,
           discount_end_date: item.discountEndDate || null,
           discount_active: item.discountActive || false,
-          sort_order: item.sortOrder || 0
+          sort_order: nextSortOrder
         })
         .select()
         .single();
@@ -246,6 +264,89 @@ export const useMenu = () => {
     }
   };
 
+  const autoFixSortOrders = async (items: any[]) => {
+    try {
+      // Find items that might have incorrect sort orders (items added after migration)
+      // These are items that don't exist in the original migration file
+      const migrationItems = [
+        'Cheesy Nachos', 'Taco Bites', 'French Fries', 'Mojitos', 'Snack Platter', 'Cheese Quesadilla', 'TORTIZZA', 'Double Cheese Bread', 'Onion Rings', 'Chicken n\' Fish Chips',
+        'Green Tossed Salad', 'Firehouse Salad', 'Paradise Salad',
+        'Classic Burger', 'Bacon & Mushroom', 'Jalapeno', 'B-L-T', 'Firehouse Paradise', 'Sliders Burger', 'Double Decker',
+        'Supreme Cheese', 'Bacon & Cheese', 'Classic Aloha', 'Vegan Lover', 'Ultimate Aloha', 'Pepperoni & Bacon', 'Tuna Jalapeno', 'Gurus Choice', 'Meat Overload', 'Pick of the Bunch',
+        'Plain Wings', 'Parmesan Wings', 'Korean Soy Wings', 'Buffalo Wings', 'Trio Wings', 'Medium Tray Wings', 'Large Tray Wings',
+        'Clubhouse Sandwich', 'Chicken Sandwich',
+        'Pinoy Spaghetti', 'Carbonara', 'Tuna Basil', 'Baked Macaroni', 'Vietnamese Pasta',
+        'GOURMET 1', 'GOURMET 2', 'GOURMET 3', 'GOURMET 4', 'GOURMET 5',
+        'Batangas Lomi',
+        'Soda in Can', 'Soda 1.5L', 'Juice', 'Solo', 'Pitcher', 'Pineapple Juice', 'Bottled Water 500ml',
+        'Kapeng Barako', 'Honey Lemon Tea',
+        'Java Chip Frappe', 'Mocha Frappe', 'Chocolate Frappe', 'Cookies and Cream Frappe', 'Caramel Macchiato Frappe',
+        'San Mig Light in Can', 'Bucket Beer',
+        'Liempo Silog', 'Bangus Silog', 'Bacon Silog', 'Ham Silog', 'Tinapa Silog', 'Danggit Silog',
+        'Grilled Liempo', 'Gourmet Chops', 'Korean Soy or Buffalo', 'Boneless Bangus', 'Chicken Poppers', 'Fried Chicken', 'Fish Fillet', 'Grilled Chicken', 'Salisbury Steak', 'Mushroom Steak', 'Hungarian or Buffalo', 'Chicken Fillet'
+      ];
+
+      // Find items that are not in the migration list (newly added items)
+      const newItems = items.filter(item => !migrationItems.includes(item.name));
+      
+      if (newItems.length > 0) {
+        console.log('Found newly added items that need sort order fix:', newItems.map(item => item.name));
+        
+        // Get the highest sort_order from migration items
+        const migrationItemsData = items.filter(item => migrationItems.includes(item.name));
+        const maxMigrationSortOrder = Math.max(...migrationItemsData.map(item => item.sort_order || 0), 0);
+        
+        // Set new items to have sort orders after migration items
+        let nextSortOrder = maxMigrationSortOrder + 1000; // Start from 1000+ to be safe
+        
+        for (const item of newItems) {
+          const { error } = await supabase
+            .from('menu_items')
+            .update({ sort_order: nextSortOrder })
+            .eq('id', item.id);
+          
+          if (error) {
+            console.error(`Error fixing sort order for ${item.name}:`, error);
+          } else {
+            console.log(`Fixed sort order for ${item.name}: ${nextSortOrder}`);
+          }
+          
+          nextSortOrder += 1;
+        }
+      }
+    } catch (err) {
+      console.error('Error in auto-fix sort orders:', err);
+      // Don't throw error here as it's not critical
+    }
+  };
+
+  const fixItemSortOrder = async (itemName: string) => {
+    try {
+      // Get the highest sort_order
+      const { data: maxSortData } = await supabase
+        .from('menu_items')
+        .select('sort_order')
+        .order('sort_order', { ascending: false })
+        .limit(1)
+        .single();
+      
+      const newSortOrder = Math.max((maxSortData?.sort_order || 0) + 1, 1000);
+      
+      // Update the specific item's sort order
+      const { error } = await supabase
+        .from('menu_items')
+        .update({ sort_order: newSortOrder })
+        .eq('name', itemName);
+
+      if (error) throw error;
+
+      await fetchMenuItems();
+    } catch (err) {
+      console.error('Error fixing sort order:', err);
+      throw err;
+    }
+  };
+
   useEffect(() => {
     fetchMenuItems();
   }, []);
@@ -257,6 +358,7 @@ export const useMenu = () => {
     addMenuItem,
     updateMenuItem,
     deleteMenuItem,
+    fixItemSortOrder,
     refetch: fetchMenuItems
   };
 };

@@ -84,6 +84,17 @@ WHERE id NOT IN (
     - Add policies for authenticated admin access
 */
 
+-- Create categories table
+CREATE TABLE IF NOT EXISTS categories (
+  id text PRIMARY KEY,
+  name text NOT NULL,
+  icon text NOT NULL DEFAULT '☕',
+  sort_order integer NOT NULL DEFAULT 0,
+  active boolean DEFAULT true,
+  created_at timestamptz DEFAULT now(),
+  updated_at timestamptz DEFAULT now()
+);
+
 -- Create menu_items table
 CREATE TABLE IF NOT EXISTS menu_items (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -280,6 +291,7 @@ CREATE TABLE IF NOT EXISTS add_ons (
 );
 
 -- Enable RLS
+ALTER TABLE categories ENABLE ROW LEVEL SECURITY;
 ALTER TABLE menu_items ENABLE ROW LEVEL SECURITY;
 ALTER TABLE variations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE add_ons ENABLE ROW LEVEL SECURITY;
@@ -287,6 +299,14 @@ ALTER TABLE add_ons ENABLE ROW LEVEL SECURITY;
 -- Create policies for public read access (only if they don't exist)
 DO $$
 BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = 'Anyone can read categories' AND tablename = 'categories') THEN
+    CREATE POLICY "Anyone can read categories"
+      ON categories
+      FOR SELECT
+      TO public
+      USING (true);
+  END IF;
+
   IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = 'Anyone can read menu items' AND tablename = 'menu_items') THEN
     CREATE POLICY "Anyone can read menu items"
       ON menu_items
@@ -309,6 +329,15 @@ BEGIN
       FOR SELECT
       TO public
       USING (true);
+  END IF;
+
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = 'Authenticated users can manage categories' AND tablename = 'categories') THEN
+    CREATE POLICY "Authenticated users can manage categories"
+      ON categories
+      FOR ALL
+      TO authenticated
+      USING (true)
+      WITH CHECK (true);
   END IF;
 
   IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = 'Authenticated users can manage menu items' AND tablename = 'menu_items') THEN
@@ -347,6 +376,17 @@ BEGIN
   RETURN NEW;
 END;
 $$ language 'plpgsql';
+
+-- Create trigger for categories (only if it doesn't exist)
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_trigger WHERE tgname = 'update_categories_updated_at') THEN
+    CREATE TRIGGER update_categories_updated_at
+      BEFORE UPDATE ON categories
+      FOR EACH ROW
+      EXECUTE FUNCTION update_updated_at_column();
+  END IF;
+END $$;
 
 -- Create trigger for menu_items (only if it doesn't exist)
 DO $$

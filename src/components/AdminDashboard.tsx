@@ -50,7 +50,17 @@ const AdminDashboard: React.FC = () => {
 
   const handleEditItem = (item: MenuItem) => {
     setEditingItem(item);
-    setFormData(item);
+    // Convert category name to ID for the form
+    const categoryId = categories.find(cat => 
+      cat.name === item.category || 
+      cat.id === item.category ||
+      cat.id === item.category.toLowerCase().replace(/\s+/g, '-')
+    )?.id || item.category;
+    
+    setFormData({
+      ...item,
+      category: categoryId
+    });
     setCurrentView('edit');
   };
 
@@ -73,13 +83,20 @@ const AdminDashboard: React.FC = () => {
       return;
     }
 
-    console.log('Form data being saved:', formData);
+    // Convert category ID back to category name for saving
+    const categoryName = categories.find(cat => cat.id === formData.category)?.name || formData.category;
+    const saveData = {
+      ...formData,
+      category: categoryName
+    };
+
+    console.log('Form data being saved:', saveData);
 
     try {
       if (editingItem) {
-        await updateMenuItem(editingItem.id, formData);
+        await updateMenuItem(editingItem.id, saveData);
       } else {
-        await addMenuItem(formData as Omit<MenuItem, 'id'>);
+        await addMenuItem(saveData as Omit<MenuItem, 'id'>);
       }
       setCurrentView('items');
       setEditingItem(null);
@@ -171,6 +188,7 @@ const AdminDashboard: React.FC = () => {
       setShowBulkActions(true);
     }
   };
+
 
   // Update bulk actions visibility when selection changes
   React.useEffect(() => {
@@ -741,7 +759,11 @@ const AdminDashboard: React.FC = () => {
                         </div>
                       </td>
                       <td className="px-6 py-4 text-sm text-gray-500">
-                        {categories.find(cat => cat.id === item.category)?.name}
+                        {categories.find(cat => 
+                          cat.id === item.category || 
+                          cat.name === item.category ||
+                          cat.id === item.category.toLowerCase().replace(/\s+/g, '-')
+                        )?.name || item.category}
                       </td>
                       <td className="px-6 py-4 text-sm font-medium text-gray-900">
                         <div className="flex flex-col">
@@ -844,7 +866,11 @@ const AdminDashboard: React.FC = () => {
                     <div>
                       <span className="text-gray-500">Category:</span>
                       <span className="ml-1 text-gray-900">
-                        {categories.find(cat => cat.id === item.category)?.name}
+                        {categories.find(cat => 
+                          cat.id === item.category || 
+                          cat.name === item.category ||
+                          cat.id === item.category.toLowerCase().replace(/\s+/g, '-')
+                        )?.name || item.category}
                       </span>
                     </div>
                     <div>

@@ -24,15 +24,6 @@ function MainApp() {
     setSelectedCategory(categoryId);
   };
 
-  // Filter menu items based on selected category
-  const filteredMenuItems = selectedCategory === 'all' 
-    ? menuItems 
-    : menuItems.filter(item => {
-        // Convert category name to ID format for comparison
-        const categoryId = item.category.toLowerCase().replace(/\s+/g, '-');
-        return categoryId === selectedCategory || item.category === selectedCategory;
-      });
-
   return (
     <div className="min-h-screen bg-firehouse-off-white font-inter">
       <Header 
@@ -44,10 +35,11 @@ function MainApp() {
       
       {currentView === 'menu' && (
         <Menu 
-          menuItems={filteredMenuItems}
+          menuItems={menuItems}
           addToCart={cart.addToCart}
           cartItems={cart.cartItems}
           updateQuantity={cart.updateQuantity}
+          selectedCategory={selectedCategory}
         />
       )}
       

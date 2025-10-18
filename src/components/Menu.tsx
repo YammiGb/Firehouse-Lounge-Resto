@@ -18,71 +18,24 @@ interface MenuProps {
   addToCart: (item: MenuItem, quantity?: number, variation?: any, addOns?: any[]) => void;
   cartItems: CartItem[];
   updateQuantity: (id: string, quantity: number) => void;
+  selectedCategory: string;
 }
 
-const Menu: React.FC<MenuProps> = ({ menuItems, addToCart, cartItems, updateQuantity }) => {
+const Menu: React.FC<MenuProps> = ({ menuItems, addToCart, cartItems, updateQuantity, selectedCategory }) => {
   const { categories } = useCategories();
-  const [activeCategory, setActiveCategory] = React.useState('all');
 
   // Preload images when menu items change
   React.useEffect(() => {
     if (menuItems.length > 0) {
-      // Preload images for visible category first
-      const visibleItems = menuItems.filter(item => item.category === activeCategory);
-      preloadImages(visibleItems);
-      
-      // Then preload other images after a short delay
-      setTimeout(() => {
-        const otherItems = menuItems.filter(item => item.category !== activeCategory);
-        preloadImages(otherItems);
-      }, 1000);
+      preloadImages(menuItems);
     }
-  }, [menuItems, activeCategory]);
+  }, [menuItems]);
 
-  const handleCategoryClick = (categoryId: string) => {
-    setActiveCategory(categoryId);
-    const element = document.getElementById(categoryId);
-    if (element) {
-      const headerHeight = 64; // Header height
-      const mobileNavHeight = 60; // Mobile nav height
-      const offset = headerHeight + mobileNavHeight + 20; // Extra padding
-      const elementPosition = element.offsetTop - offset;
-      
-      window.scrollTo({
-        top: elementPosition,
-        behavior: 'smooth'
-      });
-    }
-  };
 
-  React.useEffect(() => {
-    if (categories.length > 0 && activeCategory === 'all') {
-      // Set default to starters if it exists, otherwise first category
-      const defaultCategory = categories.find(cat => cat.id === 'starters') || categories[0];
-      if (defaultCategory) {
-        setActiveCategory(defaultCategory.id);
-      }
-    }
-  }, [categories, activeCategory]);
-
-  React.useEffect(() => {
-    const handleScroll = () => {
-      const sections = categories.map(cat => document.getElementById(cat.id)).filter(Boolean);
-      const scrollPosition = window.scrollY + 200;
-
-      for (let i = sections.length - 1; i >= 0; i--) {
-        const section = sections[i];
-        if (section && section.offsetTop <= scrollPosition) {
-          setActiveCategory(categories[i].id);
-          break;
-        }
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
+  // Filter categories based on selection
+  const categoriesToShow = selectedCategory === 'all' 
+    ? categories 
+    : categories.filter(cat => cat.id === selectedCategory);
 
   return (
     <>
@@ -95,11 +48,12 @@ const Menu: React.FC<MenuProps> = ({ menuItems, addToCart, cartItems, updateQuan
         </p>
       </div>
 
-      {categories.map((category) => {
-        const categoryItems = menuItems.filter(item => 
-          item.category.toLowerCase().replace(/\s+/g, '-') === category.id || 
-          item.category === category.name
-        );
+      {categoriesToShow.map((category) => {
+        const categoryItems = menuItems.filter(item => {
+          // Match by ID (kebab-case) or by name
+          const itemCategoryId = item.category.toLowerCase().replace(/\s+/g, '-');
+          return itemCategoryId === category.id || item.category === category.name;
+        });
         
         if (categoryItems.length === 0) return null;
         
