@@ -508,6 +508,39 @@ WHERE menu_item_id IN (
   WHERE category = 'Starters'
 );
 
+-- Remove variations from Starter items that shouldn't have any
+DELETE FROM variations 
+WHERE menu_item_id IN (
+  SELECT id FROM menu_items 
+  WHERE name IN ('Cheesy Nachos', 'Taco Bites', 'Snack Platter', 'Cheese Quesadilla', 'TORTIZZA', 'Double Cheese Bread', 'Onion Rings')
+  AND category = 'Starters'
+);
+
+-- Remove ALL variations and add-ons from categories that should not have them
+DELETE FROM variations WHERE menu_item_id IN (SELECT id FROM menu_items WHERE category = 'Burgers');
+DELETE FROM add_ons WHERE menu_item_id IN (SELECT id FROM menu_items WHERE category = 'Burgers');
+
+DELETE FROM variations WHERE menu_item_id IN (SELECT id FROM menu_items WHERE category = 'Wings');
+DELETE FROM add_ons WHERE menu_item_id IN (SELECT id FROM menu_items WHERE category = 'Wings');
+
+DELETE FROM variations WHERE menu_item_id IN (SELECT id FROM menu_items WHERE category = 'Sandwiches');
+DELETE FROM add_ons WHERE menu_item_id IN (SELECT id FROM menu_items WHERE category = 'Sandwiches');
+
+DELETE FROM variations WHERE menu_item_id IN (SELECT id FROM menu_items WHERE category = 'Frappe');
+DELETE FROM add_ons WHERE menu_item_id IN (SELECT id FROM menu_items WHERE category = 'Frappe');
+
+DELETE FROM variations WHERE menu_item_id IN (SELECT id FROM menu_items WHERE category = 'Hot Beverages');
+DELETE FROM add_ons WHERE menu_item_id IN (SELECT id FROM menu_items WHERE category = 'Hot Beverages');
+
+DELETE FROM variations WHERE menu_item_id IN (SELECT id FROM menu_items WHERE category = 'Beer');
+DELETE FROM add_ons WHERE menu_item_id IN (SELECT id FROM menu_items WHERE category = 'Beer');
+
+DELETE FROM variations WHERE menu_item_id IN (SELECT id FROM menu_items WHERE category = 'Breakfast');
+DELETE FROM add_ons WHERE menu_item_id IN (SELECT id FROM menu_items WHERE category = 'Breakfast');
+
+DELETE FROM variations WHERE menu_item_id IN (SELECT id FROM menu_items WHERE category = 'Solo Meals');
+DELETE FROM add_ons WHERE menu_item_id IN (SELECT id FROM menu_items WHERE category = 'Solo Meals');
+
 -- Aggressively remove all duplicate starter items (keep only one of each)
 -- Remove variations for duplicate starter items
 DELETE FROM variations 
@@ -1547,3 +1580,31 @@ DELETE FROM payment_methods;
 -- Disable RLS on payment_methods table for admin operations
 -- This allows the admin dashboard to add/edit payment methods without authentication
 ALTER TABLE payment_methods DISABLE ROW LEVEL SECURITY;
+
+-- FINAL CLEANUP: Ensure items that should NOT have variations/add-ons are completely clean
+-- This runs after all data insertion to catch any leftover data
+
+-- Remove variations from specific starter items that should not have any
+DELETE FROM variations WHERE menu_item_id IN (
+  SELECT id FROM menu_items 
+  WHERE name IN ('Cheesy Nachos', 'Taco Bites', 'Snack Platter', 'Cheese Quesadilla', 'TORTIZZA', 'Double Cheese Bread', 'Onion Rings')
+  AND category = 'Starters'
+);
+
+-- Remove add-ons from specific starter items that should not have any  
+DELETE FROM add_ons WHERE menu_item_id IN (
+  SELECT id FROM menu_items 
+  WHERE name IN ('Cheesy Nachos', 'Taco Bites', 'Snack Platter', 'Cheese Quesadilla', 'TORTIZZA', 'Double Cheese Bread', 'Onion Rings')
+  AND category = 'Starters'
+);
+
+-- Final cleanup for all other categories that should not have variations/add-ons
+DELETE FROM variations WHERE menu_item_id IN (
+  SELECT id FROM menu_items 
+  WHERE category IN ('Burgers', 'Wings', 'Sandwiches', 'Frappe', 'Hot Beverages', 'Beer', 'Breakfast', 'Solo Meals')
+);
+
+DELETE FROM add_ons WHERE menu_item_id IN (
+  SELECT id FROM menu_items 
+  WHERE category IN ('Burgers', 'Wings', 'Sandwiches', 'Frappe', 'Hot Beverages', 'Beer', 'Breakfast', 'Solo Meals')
+);

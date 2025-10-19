@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, ShoppingCart } from 'lucide-react';
+import { X, ShoppingCart, Plus, Minus } from 'lucide-react';
 import { MenuItem, Variation, AddOn } from '../types';
 
 interface MenuItemCardProps {
